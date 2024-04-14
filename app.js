@@ -82,7 +82,7 @@ app.post('/convert', upload.single('file'), (req, res) => {
  * @swagger
  * /convert/json:
  *   post:
- *     summary: Convert iCal data from JSON with base64 encoded content
+ *     summary: Convert a list of iCal data from JSON with base64 encoded content
  *     requestBody:
  *       required: true
  *       content:
@@ -91,22 +91,30 @@ app.post('/convert', upload.single('file'), (req, res) => {
  *             type: object
  *             properties:
  *               data:
- *                 type: string
- *                 format: base64
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: base64
  *     responses:
  *       200:
- *         description: JSON representation of the iCal data
+ *         description: List of JSON representations of the iCal data
  */
 app.post('/convert/json', jsonParser, (req, res) => {
   const { data } = req.body;
-  if (!data) {
-    return res.status(400).json({ error: 'Please provide iCal data encoded as base64' });
+
+  if (!Array.isArray(data)) {
+    return res.status(400).json({ error: 'The "data" property must be an array of base64-encoded strings' });
   }
 
+  const jsonResults = [];
+
   try {
-    const icalData = Buffer.from(data, 'base64').toString('utf-8');
-    const jsonResult = ical2json.convert(icalData);
-    res.json(jsonResult);
+    for (const icalData of data) {
+      const jsonData = ical2json.convert(Buffer.from(icalData, 'base64').toString('utf-8'));
+      jsonResults.push(jsonData);
+    }
+
+    res.json(jsonResults);
   } catch (error) {
     res.status(400).json({ error: 'Invalid base64 encoded iCal data' });
   }
