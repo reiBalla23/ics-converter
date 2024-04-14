@@ -88,11 +88,11 @@ app.post('/convert', upload.single('file'), (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               data:
- *                 type: array
- *                 items:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 base64:
  *                   type: string
  *                   format: base64
  *     responses:
@@ -100,23 +100,28 @@ app.post('/convert', upload.single('file'), (req, res) => {
  *         description: List of JSON representations of the iCal data
  */
 app.post('/convert/json', jsonParser, (req, res) => {
-  const { data } = req.body;
+  const dataList = req.body;
 
-  if (!Array.isArray(data)) {
-    return res.status(400).json({ error: 'The "data" property must be an array of base64-encoded strings' });
+  if (!Array.isArray(dataList)) {
+    return res.status(400).json({ error: 'Request body must be an array' });
   }
 
   const jsonResults = [];
 
   try {
-    for (const icalData of data) {
-      const jsonData = ical2json.convert(Buffer.from(icalData, 'base64').toString('utf-8'));
+    for (const item of dataList) {
+      if (!item.base64) {
+        throw new Error('Missing "base64" property in request item');
+      }
+
+      const icalData = Buffer.from(item.base64, 'base64').toString('utf-8');
+      const jsonData = ical2json.convert(icalData);
       jsonResults.push(jsonData);
     }
 
     res.json(jsonResults);
   } catch (error) {
-    res.status(400).json({ error: 'Invalid base64 encoded iCal data' });
+    res.status(400).json({ error: error.message });
   }
 });
 

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="955681a7-d117-4361-a77e-8f38b6ab945a" name="Changes" comment="added new endpoint">
+    <list default="true" id="955681a7-d117-4361-a77e-8f38b6ab945a" name="Changes" comment="redid ep to take lists">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
     </list>
@@ -71,7 +71,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1713097816288</updated>
-      <workItem from="1713097817392" duration="10695000" />
+      <workItem from="1713097817392" duration="11967000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -129,7 +129,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713111597027</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="redid ep to take lists">
+      <option name="closed" value="true" />
+      <created>1713115741954</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1713115741954</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,6 +151,7 @@
     <MESSAGE value="added logs p2" />
     <MESSAGE value="added logs p3" />
     <MESSAGE value="added new endpoint" />
-    <option name="LAST_COMMIT_MESSAGE" value="added new endpoint" />
+    <MESSAGE value="redid ep to take lists" />
+    <option name="LAST_COMMIT_MESSAGE" value="redid ep to take lists" />
   </component>
 </project>
