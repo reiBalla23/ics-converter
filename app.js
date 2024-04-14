@@ -60,7 +60,7 @@ app.post('/convert', upload.single('file'), (req, res) => {
 
     try {
       const jsonResult = ical2json.convert(data);
-      console.log('Conversion result: ' + jsonResult)
+      console.log('Conversion result: ' + JSON.stringify(jsonResult))
       res.json(jsonResult);
     } catch (error) {
       res.status(400).json({ error: 'Invalid iCal data' });
