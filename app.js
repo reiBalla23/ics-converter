@@ -23,7 +23,7 @@ const swaggerOptions = {
       description: 'Convert iCal files to JSON format',
     },
   },
-  apis: ['./index.js'],
+  apis: ['./app.js'],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
