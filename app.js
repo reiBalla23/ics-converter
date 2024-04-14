@@ -52,7 +52,8 @@ app.post('/convert', upload.single('file'), (req, res) => {
   if (!req.file || req.file.mimetype !== 'text/calendar') {
     return res.status(400).json({ error: 'Please upload a valid .ics file' });
   }
-  console.log('Got new request.')
+  console.log('\nGot new request.')
+  console.log(req.file);
   fs.readFile(req.file.path, 'utf8', (err, data) => {
     if (err) {
       return res.status(500).json({ error: 'Error reading the uploaded file' });
@@ -60,7 +61,7 @@ app.post('/convert', upload.single('file'), (req, res) => {
 
     try {
       const jsonResult = ical2json.convert(data);
-      console.log('Conversion result: ' + JSON.stringify(jsonResult))
+      console.log('\nConversion result: ' + JSON.stringify(jsonResult))
       res.json(jsonResult);
     } catch (error) {
       res.status(400).json({ error: 'Invalid iCal data' });
