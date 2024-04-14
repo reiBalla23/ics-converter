@@ -4,6 +4,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const ical2json = require('ical2json');
 const multer = require('multer');
 const fs = require('fs');
+const bodyParser = require('body-parser')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,9 @@ const swaggerOptions = {
   },
   apis: ['./app.js'],
 };
+
+// create application/json parser
+var jsonParser = bodyParser.json()
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -52,8 +56,7 @@ app.post('/convert', upload.single('file'), (req, res) => {
   if (!req.file || req.file.mimetype !== 'text/calendar') {
     return res.status(400).json({ error: 'Please upload a valid .ics file' });
   }
-  console.log('\nGot new request.')
-  console.log(req.file);
+
   fs.readFile(req.file.path, 'utf8', (err, data) => {
     if (err) {
       return res.status(500).json({ error: 'Error reading the uploaded file' });
@@ -61,7 +64,6 @@ app.post('/convert', upload.single('file'), (req, res) => {
 
     try {
       const jsonResult = ical2json.convert(data);
-      console.log('\nConversion result: ' + JSON.stringify(jsonResult))
       res.json(jsonResult);
     } catch (error) {
       res.status(400).json({ error: 'Invalid iCal data' });
@@ -74,6 +76,40 @@ app.post('/convert', upload.single('file'), (req, res) => {
       });
     }
   });
+});
+
+/**
+ * @swagger
+ * /convert/json:
+ *   post:
+ *     summary: Convert iCal data from JSON with base64 encoded content
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               data:
+ *                 type: string
+ *                 format: base64
+ *     responses:
+ *       200:
+ *         description: JSON representation of the iCal data
+ */
+app.post('/convert/json', jsonParser, (req, res) => {
+  const { data } = req.body;
+  if (!data) {
+    return res.status(400).json({ error: 'Please provide iCal data encoded as base64' });
+  }
+
+  try {
+    const icalData = Buffer.from(data, 'base64').toString('utf-8');
+    const jsonResult = ical2json.convert(icalData);
+    res.json(jsonResult);
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid base64 encoded iCal data' });
+  }
 });
 
 app.listen(PORT, () => {
